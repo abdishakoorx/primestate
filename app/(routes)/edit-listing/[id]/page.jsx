@@ -64,7 +64,7 @@ function EditListing({params}) {
                 type: 'Sell',
                 propertyType: '',
                 profileImage: user?.imageUrl,
-                profileName: user?.fullName
+                username: user?.fullName
             }}  
             onSubmit={(values)=>{
                 console.log(values);
