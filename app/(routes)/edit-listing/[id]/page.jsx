@@ -36,7 +36,7 @@ function EditListing({params}) {
     const verifyUserRecord =async () =>{
         const { data, error } = await supabase
         .from('listing')
-        .select('*')
+        .select('*,listingImages(listing_id,url)')
         .eq('createdby', user?.primaryEmailAddress.emailAddress)
         .eq('id', params.id)
 
@@ -244,7 +244,7 @@ function EditListing({params}) {
 
                         <div className='flex flex-col gap-2 mt-10'>
                             <h2 className='mb-3 text-lg font-semibold text-slate-400'>Upload Property Images</h2>
-                            <FileUpload setImages={(value)=>setImages(value)}/>
+                            <FileUpload setImages={(value)=>setImages(value)} imageList={listing.listingImages}/>
                         </div>
 
                         <div className='flex justify-end gap-4'>

@@ -31,7 +31,7 @@ function FileUpload({setImages, imageList}) {
             <div className='grid grid-cols-2 gap-4 mt-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9'>
                 {imageList.map((image,index)=>(
                     <div key={index}>
-                        <Image src={image} width={120} height={120} alt={index}
+                        <Image src={image?.url} width={120} height={120} alt={index}
                         className='rounded-xl object-cover w-[100px] h-[100px]'/>
                     </div>
                 ))}
@@ -39,7 +39,7 @@ function FileUpload({setImages, imageList}) {
             <div className='grid grid-cols-2 gap-4 mt-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9'>
                 {imagePreview.map((image,index)=>(
                     <div key={index}>
-                        <Image src={image?.url} width={120} height={120} alt={index}
+                        <Image src={image.url} width={120} height={120} alt={index}
                         className='rounded-xl object-cover w-[100px] h-[100px]'/>
                     </div>
                 ))}
