@@ -27,12 +27,20 @@ module.exports = {
           DEFAULT: "#E0E0E0",
           foreground: "hsl(var(--primary-foreground))",
         },
+        bgprimary: {
+          DEFAULT: "#121212",
+          foreground: "hsl(var(--primary-foreground))",
+        },
         secondary: {
           DEFAULT: "#00BFA6",
           foreground: "hsl(var(--secondary-foreground))",
         },
         tertiary: {
           DEFAULT: "#FFA726",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        quantenary: {
+          DEFAULT: "#B0B0B0",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
