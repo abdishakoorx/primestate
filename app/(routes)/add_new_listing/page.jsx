@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { supabase } from '@/Utils/supabase/client'
 import { useUser } from '@clerk/nextjs'
 import { Loader } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -11,6 +12,7 @@ function AddNewListing() {
   const [selectedAddress, setSelectedAddress] = useState()
   const [coordinates, setCoordinates] = useState()
   const {user} = useUser()
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const nextHandler = async() =>{
     setLoading(true)
@@ -24,12 +26,11 @@ function AddNewListing() {
     .select();
     if (data){
       setLoading(false)
-      console.log("New data added",data);
       toast('New listing added successfully')
+      router.replace('/edit-listing/'+data[0].id)
     }
     if (error){
       setLoading(false)
-      console.log("Error",error);
       toast('Server side error')
     }
             
