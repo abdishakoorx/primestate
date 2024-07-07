@@ -3,7 +3,7 @@ import { MapPin } from 'lucide-react';
 import React from 'react'
 import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete'
 
-function GoogleAddressSearch() {
+function GoogleAddressSearch({selectedAddress, setCoordinates}) {
   return (
     <div className='flex items-center w-full gap-4 mt-2 text-black'>
       <MapPin className='w-12 h-12 p-2 rounded-l-lg text-primary bg-tertiary' />
@@ -14,11 +14,10 @@ function GoogleAddressSearch() {
           isClearable:true,
           className:'w-full',
           onChange:(place)=>{
-            console.log(place);
+            selectedAddress(place)
             geocodeByAddress(place.label)
             .then(results => getLatLng(results[0]))
             .then(({ lat, lng }) => {
-              console.log( lat, lng );
               setCoordinates({lat, lng})
             })
           }
