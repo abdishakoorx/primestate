@@ -13,10 +13,12 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Formik } from 'formik'
-import { usePathname, useRouter } from 'next/navigation'
+import {  useRouter } from 'next/navigation'
 import { supabase } from '@/Utils/supabase/client'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
+import FileUpload from '../_components/FileUpload'
+import { Loader, Loader2 } from 'lucide-react'
 
 
 
@@ -24,6 +26,8 @@ function EditListing({params}) {
     const {user} = useUser()
     const router = useRouter()
     const [listing, setListing] = useState([])
+    const [images, setImages] = useState([])
+    const [loading,setloading] = useState(false)
 
     useEffect(() => {
         user&&verifyUserRecord();
@@ -46,6 +50,7 @@ function EditListing({params}) {
     }
 
     const onSubmitHandler = async (formValue)=>{
+        setloading(true)
         const { data, error } = await supabase
         .from('listing')
         .update(formValue)
@@ -54,6 +59,38 @@ function EditListing({params}) {
 
         if (data){
             toast('Listing Updated and Published')
+        }
+
+        for (const image of images){
+            const file = image;
+            const fileName = Date.now().toString();
+            const fileExtract = fileName.split('.').pop();
+
+            const { data, error } = await supabase.storage
+            .from('listingImages')
+            .upload(`${fileName}`,file,{
+                contentType:`image/${fileExtract}`,
+                upsert:false
+            })
+
+            if (error){
+                setloading(false)
+                toast('Error uploading images')
+            }
+            else{
+                const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL+fileName;
+                const {data,error} = await supabase
+                .from('listingImages')
+                .insert([
+                    {url:imageUrl, listing_id:params?.id}
+                ])
+                .select()
+
+                if(error){
+                    setloading(false)
+                }
+            }
+            setloading(false)
         }
     }
     
@@ -67,8 +104,7 @@ function EditListing({params}) {
                 username: user?.fullName
             }}  
             onSubmit={(values)=>{
-                console.log(values);
-                onSubmitHandler(values)
+                onSubmitHandler(values);
             }}>
             {({ values, handleChange, handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
@@ -206,9 +242,14 @@ function EditListing({params}) {
                             </div>
                         </div>
 
+                        <div className='flex flex-col gap-2 mt-10'>
+                            <h2 className='mb-3 text-lg font-semibold text-slate-400'>Upload Property Images</h2>
+                            <FileUpload setImages={(value)=>setImages(value)}/>
+                        </div>
+
                         <div className='flex justify-end gap-4'>
                             {/* <Button variant="outline" className='mt-10  border-tertiary border-4 font-bold h-[45px] text-black bg-primary hover:bg-primary rounded-xl'>Save</Button> */}
-                            <Button type="submit" className='mt-10 font-bold text-black rounded-xl h-[45px] bg-tertiary hover:bg-tertiary '>Save & Publish</Button>
+                            <Button disabled={loading} type="submit" className='mt-10 font-bold text-black rounded-xl h-[45px] bg-tertiary hover:bg-tertiary'>{loading?<Loader className='animate-spin'/>:'Save & Publish'}</Button>
                         </div>
                     </div>
                 </div>
