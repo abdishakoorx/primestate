@@ -172,6 +172,7 @@ function EditListing({ params }) {
                                                 <SelectItem value="Bedsitter">Bedsitter</SelectItem>
                                                 <SelectItem value="Hostel">Hostel</SelectItem>
                                                 <SelectItem value="Villa">Villa</SelectItem>
+                                                <SelectItem value="Villa">Penthouse</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
