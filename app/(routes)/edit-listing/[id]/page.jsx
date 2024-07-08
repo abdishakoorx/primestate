@@ -58,10 +58,12 @@ function EditListing({params}) {
         .select();
 
         if (data){
-            toast('Listing Updated and Published')
+            toast('Listing Updated and Published');
+            setloading(false)
         }
 
         for (const image of images){
+            setloading(true)
             const file = image;
             const fileName = Date.now().toString();
             const fileExtract = fileName.split('.').pop();
@@ -77,6 +79,7 @@ function EditListing({params}) {
                 setloading(false)
                 toast('Error uploading images')
             }
+            
             else{
                 const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL+fileName;
                 const {data,error} = await supabase
@@ -85,6 +88,10 @@ function EditListing({params}) {
                     {url:imageUrl, listing_id:params?.id}
                 ])
                 .select()
+
+                if (data){
+                    setloading(false)
+                }
 
                 if(error){
                     setloading(false)
@@ -248,7 +255,7 @@ function EditListing({params}) {
                         </div>
 
                         <div className='flex justify-end gap-4'>
-                            {/* <Button variant="outline" className='mt-10  border-tertiary border-4 font-bold h-[45px] text-black bg-primary hover:bg-primary rounded-xl'>Save</Button> */}
+                            <Button disabled={loading} variant="outline" className='mt-10  border-tertiary border-4 font-bold h-[45px] text-black bg-primary hover:bg-primary rounded-xl'>{loading?<Loader className='animate-spin'/>:'Save'}</Button>
                             <Button disabled={loading} type="submit" className='mt-10 font-bold text-black rounded-xl h-[45px] bg-tertiary hover:bg-tertiary'>{loading?<Loader className='animate-spin'/>:'Save & Publish'}</Button>
                         </div>
                     </div>
