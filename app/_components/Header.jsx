@@ -15,9 +15,9 @@ function Header() {
         <Image src='/logo.png' alt='logo' width={150} height={150}/>
 
         <ul className='hidden gap-10 md:flex'>
-          <li className='font-medium cursor-pointer hover:text-tertiary'>Buy Property</li>
-          <li className='cursor-pointer hover:text-tertiary'>Rent Property</li>
-          <li className='cursor-pointer hover:text-tertiary'>Agent Finder</li>
+          <Link href={'/'}><li className='font-medium cursor-pointer hover:text-tertiary'>Buy Property</li></Link>
+          <Link href={'/'}><li className='cursor-pointer hover:text-tertiary'>Rent Property</li></Link>
+          <Link href={'/'}><li className='cursor-pointer hover:text-tertiary'>Agent Finder</li></Link>
         </ul>
       </div>
       <div className='flex items-center gap-6'>
