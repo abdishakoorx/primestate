@@ -23,7 +23,7 @@ function Listing({ listing }) {
           </div>
         ))
           : [1, 2, 3, 4, 5, 6].map((item, index) => (
-            <div>
+            <div key={index}>
               <div className='animate-pulse bg-slate-100 h-[180px] rounded-lg'></div>
               <div className='flex flex-col gap-2 mt-3'>
                 <div className='w-1/2 h-4 rounded-lg animate-pulse bg-slate-100'></div>
