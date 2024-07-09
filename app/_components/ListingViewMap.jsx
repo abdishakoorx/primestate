@@ -23,9 +23,8 @@ function ListingViewMap({type}) {
         {
             setListing(data)
         }
-        if (error)
-        {
-            toast('Server1 side error')
+        if (error) {
+            window.location.reload();
         }
     }
 
