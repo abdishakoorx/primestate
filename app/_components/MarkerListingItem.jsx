@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Bath, BedDouble, MapPin, Ruler, X } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 function MarkerListingItem({ item, closeHandler }) {
@@ -19,8 +20,7 @@ function MarkerListingItem({ item, closeHandler }) {
                         <h2 className='flex items-center justify-center w-full gap-2 p-2 rounded-md text-md bg-slate-100 text-secondary'><BedDouble className='' />{item?.bedroom}</h2>
                         <h2 className='flex items-center justify-center w-full gap-2 p-2 rounded-md text-md bg-slate-100 text-secondary'><Bath className='' />{item?.bathroom}</h2>
                     </div>
-                    
-                <Button className='bg-tertiary hover:bg-tertiary'>View Details</Button>
+                    <Link href={'/view-listing/' + item.id}><Button className='w-full bg-tertiary hover:bg-tertiary'>View Details</Button></Link>
                 </div>
             </div>
         </div>
