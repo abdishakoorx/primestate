@@ -3,8 +3,9 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import GoogleAddressSearch from './GoogleAddressSearch'
 import { Button } from '@/components/ui/button'
+import FilterSection from './FilterSection'
 
-function Listing({ listing, handleSearchClick, searchedAddress}) {
+function Listing({ listing, handleSearchClick, searchedAddress, setBedCount, setBathCount, setHomeType, setParkingCount}) {
   const [address, setAddress] = useState()
   const [showResults, setShowResults] = useState(false)
 
@@ -29,6 +30,7 @@ function Listing({ listing, handleSearchClick, searchedAddress}) {
           <Search className='w-4 h-4' />Search
         </Button>
       </div>
+      <FilterSection setBedCount={setBedCount} setBathCount={setBathCount} setParkingCount={setParkingCount} setHomeType={setHomeType}/>
       {showResults && address &&
       <div className='px-3 my-6'>
         <h2 className='text-lg'><span className='font-bold'>{listing?.length}</span> results in <span className='text-secondary'>{address?.label}</span></h2>
