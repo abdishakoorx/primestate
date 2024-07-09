@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Listing from './Listing'
 import { supabase } from '@/Utils/supabase/client'
+import GoogleMapSection from './GoogleMapSection'
 
 
 function ListingViewMap({type}) {
@@ -11,6 +12,7 @@ function ListingViewMap({type}) {
     const [bathCount, setBathCount] = useState(0)
     const [parkingCount, setParkingCount] = useState(0)
     const [homeType, setHomeType] = useState()
+    const [coordinates, setCoordinates] = useState()
     useEffect(()=>{
         getLatestListing()
     },[])
@@ -69,13 +71,13 @@ function ListingViewMap({type}) {
 
 
   return (
-    <div className='grid grid-cols-1 p-10 px-10 md:grid-cols-2'>
+    <div className='grid grid-cols-1 gap-10 p-10 px-10 md:grid-cols-2'>
         <div>
-            <Listing listing={listing} handleSearchClick={handleSearchClick} searchedAddress={(v)=> setSearchedAddress(v)} setBedCount={setBedCount} setBathCount={setBathCount} setParkingCount={setParkingCount} setHomeType={setHomeType}/>
+            <Listing listing={listing} handleSearchClick={handleSearchClick} searchedAddress={(v)=> setSearchedAddress(v)} setBedCount={setBedCount} setBathCount={setBathCount} setParkingCount={setParkingCount} setHomeType={setHomeType} setCoordinates={setCoordinates}/>
         </div>
 
-        <div>
-            Map
+        <div className='md:fixed md:right-10 h-full md:w-[350px] lg:w-[450px] xl:w-[630px]'>
+            <GoogleMapSection coordinates={coordinates} />
         </div>
     </div>
   )

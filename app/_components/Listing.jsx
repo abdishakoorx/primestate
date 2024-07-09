@@ -5,7 +5,7 @@ import GoogleAddressSearch from './GoogleAddressSearch'
 import { Button } from '@/components/ui/button'
 import FilterSection from './FilterSection'
 
-function Listing({ listing, handleSearchClick, searchedAddress, setBedCount, setBathCount, setHomeType, setParkingCount}) {
+function Listing({ listing, handleSearchClick, searchedAddress, setBedCount, setBathCount, setHomeType, setParkingCount, setCoordinates}) {
   const [address, setAddress] = useState()
   const [showResults, setShowResults] = useState(false)
 
@@ -20,7 +20,7 @@ function Listing({ listing, handleSearchClick, searchedAddress, setBedCount, set
         <div className='flex-grow'>
           <GoogleAddressSearch
             selectedAddress={(v) => {searchedAddress(v); setAddress(v); setShowResults(false)}}
-            setCoordinates={(v) => console.log(v)}
+            setCoordinates={setCoordinates}
           />
         </div>
         <Button
