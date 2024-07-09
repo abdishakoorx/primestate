@@ -20,9 +20,9 @@ function ListingViewMap({ type }) {
             try {
                 const firstListingCoordinates = JSON.parse(listing[0].coordinates);
                 setCenter(firstListingCoordinates);
-                console.log("Setting center to:", firstListingCoordinates);
+                // console.log("Setting center to:", firstListingCoordinates);
             } catch (error) {
-                console.error("Error parsing coordinates:", error);
+                // console.error("Error parsing coordinates:", error);
             }
         }
     }, [listing])
@@ -42,7 +42,7 @@ function ListingViewMap({ type }) {
             setListing(data)
         }
         if (error) {
-            window.location.reload();
+            // window.location.reload();
         }
     }
 
@@ -78,7 +78,7 @@ function ListingViewMap({ type }) {
             setListing(data)
         }
         if (error) {
-            window.location.reload();
+            // window.location.reload();
         }
     }
 
