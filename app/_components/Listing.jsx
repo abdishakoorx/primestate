@@ -1,11 +1,39 @@
-import { Bath, BedDouble, BedDoubleIcon, MapPin, Ruler } from 'lucide-react'
+import { Bath, BedDouble, MapPin, Ruler, Search } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
+import GoogleAddressSearch from './GoogleAddressSearch'
+import { Button } from '@/components/ui/button'
 
-function Listing({ listing }) {
+function Listing({ listing, handleSearchClick, searchedAddress}) {
+  const [address, setAddress] = useState()
+  const [showResults, setShowResults] = useState(false)
+
+  const handleSearch = () => {
+    handleSearchClick()
+    setShowResults(true)
+  }
+
   return (
     <div>
-      <div className='grid grid-cols-1 gap-3 md:grid-cols-2'>
+      <div className='flex items-stretch gap-4 p-3'>
+        <div className='flex-grow'>
+          <GoogleAddressSearch
+            selectedAddress={(v) => {searchedAddress(v); setAddress(v); setShowResults(false)}}
+            setCoordinates={(v) => console.log(v)}
+          />
+        </div>
+        <Button
+          onClick={handleSearch}
+          className='flex items-center self-end gap-2 text-black bg-secondary hover:bg-secondary'
+        >
+          <Search className='w-4 h-4' />Search
+        </Button>
+      </div>
+      {showResults && address &&
+      <div className='px-3 my-6'>
+        <h2 className='text-lg'><span className='font-bold'>{listing?.length}</span> results in <span className='text-secondary'>{address?.label}</span></h2>
+      </div>}
+      <div className='grid grid-cols-1 gap-10 lg:grid-cols-2'>
         {listing?.length > 0 ? listing.map((item, index) => (
           <div key={index} className='p-3 rounded-lg cursor-pointer hover:border hover:border-primary'>
             <Image src={item.listingImages[0].url} alt={item.address} width={800} height={150}
@@ -35,10 +63,9 @@ function Listing({ listing }) {
                 </div>
               </div>
             </div>
-      ))
-        }
+          ))}
+      </div>
     </div>
-    </div >
   )
 }
 

@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 
 function ListingViewMap({type}) {
     const [listing, setListing] = useState([])
+    const [searchedAddress, setSearchedAddress] = useState()
     useEffect(()=>{
         getLatestListing()
     },[])
@@ -24,7 +25,22 @@ function ListingViewMap({type}) {
         }
         if (error)
         {
-            toast('Server side error')
+            toast('Server1 side error')
+        }
+    }
+
+    const handleSearchClick = async () => {
+        const searchTerm = searchedAddress?.value?.structured_formatting?.main_text
+        const { data, error } = await supabase
+        .from ('listing')
+        .select('* , listingImages(url, listing_id)')
+        .eq('active', true)
+        .eq('type',  type)
+        .like('address', `%${searchTerm}%`)
+        .order('id', {ascending:false})
+    
+        if (data) {
+          setListing(data)
         }
     }
 
@@ -32,7 +48,7 @@ function ListingViewMap({type}) {
   return (
     <div className='grid grid-cols-1 p-10 px-10 md:grid-cols-2'>
         <div>
-            <Listing listing={listing}/>
+            <Listing listing={listing} handleSearchClick={handleSearchClick} searchedAddress={(v)=> setSearchedAddress(v)} />
         </div>
 
         <div>
