@@ -3,6 +3,10 @@ import React from 'react'
 import MarkerListingItem from './MarkerListingItem'
 
 function MapMarker({ item, isSelected, onSelect, onClose }) {
+    if (!item.coordinates || !item.coordinates.lat || !item.coordinates.lng) {
+        return null; // Don't render the marker if coordinates are invalid
+    }
+
     return (
         <div>
             <MarkerF

@@ -28,16 +28,27 @@ function GoogleMapSection({ coordinates, listing, center }) {
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY
     })
 
+    const parseCoordinates = (coordinates) => {
+        if (typeof coordinates === 'string') {
+            try {
+                return JSON.parse(coordinates);
+            } catch (error) {
+                return null;
+            }
+        } else if (typeof coordinates === 'object' && coordinates !== null) {
+            return coordinates;
+        }
+        return null;
+    };
+
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds();
         let hasValidCoordinates = false;
         listing.forEach((item) => {
-            try {
-                const coordinates = JSON.parse(item.coordinates);
-                bounds.extend(new window.google.maps.LatLng(coordinates.lat, coordinates.lng));
+            const coords = parseCoordinates(item.coordinates);
+            if (coords && coords.lat && coords.lng) {
+                bounds.extend(new window.google.maps.LatLng(coords.lat, coords.lng));
                 hasValidCoordinates = true;
-            } catch (error) {
-                console.error("Error parsing coordinates for item:", item.id, error);
             }
         });
         if (hasValidCoordinates) {
@@ -48,10 +59,6 @@ function GoogleMapSection({ coordinates, listing, center }) {
         }
     }, [listing, mapCenter])
 
-    const onUnmount = React.useCallback(function callback(map) {
-        // Any cleanup code can go here
-    }, [])
-
     return isLoaded ? (
         <div>
             <GoogleMap
@@ -59,20 +66,27 @@ function GoogleMapSection({ coordinates, listing, center }) {
                 center={mapCenter}
                 zoom={14}
                 onLoad={onLoad}
-                onUnmount={onUnmount}
+                // onUnmount={onUnmount}
             >
-                {listing.map((item, index) => {
-                    const coordinates = JSON.parse(item.coordinates);
-                    return (
-                        <MapMarker
-                            key={index}
-                            item={{ ...item, coordinates }}
-                            isSelected={selectedPin && selectedPin.id === item.id}
-                            onSelect={() => setSelectedPin(item)}
-                            onClose={() => setSelectedPin(null)}
-                        />
-                    );
-                })}
+                {listing && listing.length > 0 ? (
+                    listing.map((item, index) => {
+                        const coordinates = parseCoordinates(item.coordinates);
+                        if (!coordinates) {
+                            return null;
+                        }
+                        return (
+                            <MapMarker
+                                key={index}
+                                item={{ ...item, coordinates }}
+                                isSelected={selectedPin && selectedPin.id === item.id}
+                                onSelect={() => setSelectedPin(item)}
+                                onClose={() => setSelectedPin(null)}
+                            />
+                        );
+                    })
+                ) : (
+                    <div>No listings to display</div>
+                )}
             </GoogleMap>
         </div>
     ) : <></>
