@@ -10,9 +10,9 @@ import { Bath, BedDouble, CarFront } from 'lucide-react'
 
 function FilterSection({ setBedCount, setBathCount, setParkingCount, setHomeType, bedCount, bathCount, parkingCount, homeType }) {
     return (
-        <div className='grid grid-cols-2 gap-5 px-3 py-3 md:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-5 px-3 py-3 md:grid-cols-2 lg:grid-cols-4'>
             <Select value={bedCount} onValueChange={(value) => setBedCount(value === 'All' ? null : value)}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[100px]">
                     <SelectValue placeholder="Bed" />
                 </SelectTrigger>
                 <SelectContent>
@@ -23,7 +23,7 @@ function FilterSection({ setBedCount, setBathCount, setParkingCount, setHomeType
                 </SelectContent>
             </Select>
             <Select value={bathCount} onValueChange={(value) => setBathCount(value === 'All' ? null : value)}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[100px]">
                     <SelectValue placeholder="Bath" />
                 </SelectTrigger>
                 <SelectContent>
@@ -34,7 +34,7 @@ function FilterSection({ setBedCount, setBathCount, setParkingCount, setHomeType
                 </SelectContent>
             </Select>
             <Select value={parkingCount} onValueChange={(value) => setParkingCount(value === 'All' ? null : value)}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[100px]">
                     <SelectValue placeholder="Parking" />
                 </SelectTrigger>
                 <SelectContent>
@@ -45,7 +45,7 @@ function FilterSection({ setBedCount, setBathCount, setParkingCount, setHomeType
                 </SelectContent>
             </Select>
             <Select value={homeType} onValueChange={(value) => setHomeType(value === 'All' ? null : value)}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[100px]">
                     <SelectValue placeholder="Property type" />
                 </SelectTrigger>
                 <SelectContent>
