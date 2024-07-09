@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import Listing from './Listing'
 import { supabase } from '@/Utils/supabase/client'
-import { toast } from 'sonner'
 
 
 function ListingViewMap({type}) {
