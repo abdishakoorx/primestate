@@ -41,9 +41,7 @@ function ListingViewMap({ type }) {
         if (data) {
             setListing(data)
         }
-        if (error) {
-            // window.location.reload();
-        }
+        
     }
 
     const handleSearchClick = async () => {
@@ -77,9 +75,7 @@ function ListingViewMap({ type }) {
         if (data) {
             setListing(data)
         }
-        if (error) {
-            // window.location.reload();
-        }
+        
     }
 
 
