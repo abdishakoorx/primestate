@@ -2,7 +2,7 @@
 import React from 'react'
 import Header from './_components/Header'
 import { LoadScript } from '@react-google-maps/api'
-import FooterSection from './_components/FooterSection'
+import FooterSection from './(routes)/home/_components/FooterSection'
 
 function Provider({children}) {
   return (
@@ -12,7 +12,7 @@ function Provider({children}) {
         <div className='mt-20'>
           {children}
         </div>
-        <FooterSection/>
+        
         </LoadScript>
     </div>
   )
