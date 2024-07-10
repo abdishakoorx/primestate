@@ -66,6 +66,7 @@ function GoogleMapSection({ coordinates, listing, center }) {
                 center={mapCenter}
                 zoom={14}
                 onLoad={onLoad}
+                gestureHandling='greedy'
                 // onUnmount={onUnmount}
             >
                 {listing && listing.length > 0 ? (
