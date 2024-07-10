@@ -24,7 +24,7 @@ function Header() {
   return (
     <div className='fixed top-0 z-10 flex justify-between w-full p-6 px-10 bg-black shadow-sm shadow-quantenary'>
       <div className='flex items-center gap-20'>
-        <Link href={'/'}><Image src='/logo.png' alt='logo' width={150} height={150} /></Link>
+        <Link href={'/home'}><Image src='/logo.png' alt='logo' width={150} height={150} /></Link>
         <ul className='hidden gap-10 md:flex'>
           <Link href={'/'}>
             <li className={`font-medium cursor-pointer hover:text-tertiary ${pathname === '/' ? 'text-tertiary' : ''}`}>
@@ -52,14 +52,13 @@ function Header() {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className='cursor-pointer'><Link href={'/user'}>Profile</Link></DropdownMenuItem>
-              <DropdownMenuItem className='cursor-pointer'>My Listing</DropdownMenuItem>
+              <DropdownMenuItem className='cursor-pointer'><Link href={'/user'}>My Listing</Link></DropdownMenuItem>
               <DropdownMenuItem className='cursor-pointer'> <SignOutButton>Logout</SignOutButton></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           :
-          <Link href={'/sign-up'}><Button className='bg-secondary hover:bg-tertiary'>Sign in</Button></Link>}
+          <Link href={'/sign-in'}><Button className='bg-secondary hover:bg-tertiary'>Sign in</Button></Link>}
       </div>
     </div>
   )
