@@ -15,38 +15,46 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-
-
 function Header() {
   const { user, isSignedIn } = useUser()
   const pathname = usePathname();
+
+  const ProtectedLink = ({ href, children }) => {
+    return isSignedIn ? (
+      <Link href={href}>{children}</Link>
+    ) : (
+      <Link href="/sign-in">{children}</Link>
+    );
+  };
 
   return (
     <div className='fixed top-0 z-10 flex justify-between w-full p-6 px-10 bg-black shadow-sm shadow-quantenary'>
       <div className='flex items-center gap-20'>
         <Link href={'/home'}><Image src='/logo.png' alt='logo' width={150} height={150} /></Link>
         <ul className='hidden gap-10 md:flex'>
-          <Link href={'/'}>
-            <li className={`font-medium cursor-pointer hover:text-tertiary ${pathname === '/' ? 'text-tertiary' : ''}`}>
+          <Link href={'/home'} className={`font-medium cursor-pointer hover:text-tertiary ${pathname === '/home' ? 'text-tertiary' : ''}`}>
+            Home
+          </Link>
+          <ProtectedLink href='/dashboard'>
+            <li className={`font-medium cursor-pointer hover:text-tertiary ${pathname === '/dashboard' ? 'text-tertiary' : ''}`}>
               Buy Property
             </li>
-          </Link>
-          <Link href={'/rent'}>
+          </ProtectedLink>
+          <ProtectedLink href='/rent'>
             <li className={`font-medium cursor-pointer hover:text-tertiary ${pathname === '/rent' ? 'text-tertiary' : ''}`}>
               Rent Property
             </li>
-          </Link>
-          <Link href={'/'}>
+          </ProtectedLink>
+          <ProtectedLink href='/agent-finder'>
             <li className={`font-medium cursor-pointer hover:text-tertiary ${pathname === '/agent-finder' ? 'text-tertiary' : ''}`}>
               Agent Finder
             </li>
-          </Link>
+          </ProtectedLink>
         </ul>
       </div>
       <div className='flex items-center gap-6'>
         <Link href={'/add_new_listing'}><Button className='gap-1 bg-opacity-90 bg-tertiary hover:bg-opacity-100 hover:bg-tertiary'><Plus className='w-5 h-5' />Post Listing</Button></Link>
         {isSignedIn ?
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild><Image src={user?.imageUrl} width={40} height={40} alt='user' className='rounded-full cursor-pointer' /></DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -56,7 +64,6 @@ function Header() {
               <DropdownMenuItem className='cursor-pointer'> <SignOutButton>Logout</SignOutButton></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
           :
           <Link href={'/sign-in'}><Button className='bg-secondary hover:bg-tertiary'>Sign in</Button></Link>}
       </div>
