@@ -9,6 +9,7 @@ function Home() {
         <HeroSection/>
         <HomeSection/>
         <Testemonial/>
+        <FooterSection/>
     </div>
   )
 }
