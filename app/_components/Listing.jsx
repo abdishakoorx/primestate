@@ -17,7 +17,7 @@ function Listing({ listing, handleSearchClick, searchedAddress, setBedCount, set
 
   return (
     <div>
-      <div className='flex items-stretch gap-4 p-3'>
+      <div className='flex items-stretch gap-4 p-3 '>
         <div className='flex-grow'>
           <GoogleAddressSearch
             selectedAddress={(v) => { searchedAddress(v); setAddress(v); setShowResults(false) }}

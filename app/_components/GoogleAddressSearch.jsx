@@ -5,12 +5,12 @@ import GooglePlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-goo
 
 function GoogleAddressSearch({selectedAddress, setCoordinates}) {
   return (
-    <div className='flex items-center w-full gap-4 mt-2 text-black'>
-      <MapPin className='w-12 h-12 p-2 rounded-l-lg text-primary bg-tertiary' />
-      <GooglePlacesAutocomplete 
+    <div className='flex items-center w-full mt-2 text-black'>
+      <MapPin className='p-2 rounded-l-lg w-11 h-11 text-primary bg-tertiary' />
+      <GooglePlacesAutocomplete className=' h-[44px]' 
         apiKey = {process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY}
         selectProps={{
-          placeholder:'Search property address',
+          placeholder:'Address',
           isClearable:true,
           className:'w-full',
           onChange:(place)=>{

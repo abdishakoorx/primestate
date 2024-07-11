@@ -73,7 +73,7 @@ function Details({ listingDetail }) {
                                 <p className="text-sm text-gray-400">Parking</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 mt-6">
+                        <div className="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2">
                             <p className="flex items-center"><Calendar className="mr-2 text-tertiary" size={20} /> Built in {builtIn}</p>
                             <p className="flex items-center"><DollarSign className="mr-2 text-tertiary" size={20} /> HOA:Ksh {hoa}/month</p>
                         </div>
@@ -83,12 +83,12 @@ function Details({ listingDetail }) {
                     <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
                         <h2 className="mb-4 text-xl font-semibold text-secondary">Description</h2>
                         <p className="mb-4">{description}</p>
-                        <div className="flex items-center justify-between pt-4 text-sm text-gray-400 border-t border-gray-700">
+                        <div className="flex-col items-center justify-between pt-4 text-sm text-gray-400 border-t border-gray-700 md:flex">
                             <p className="flex items-center gap-2">
                                 <Image src={profileImage} width={30} height={30} className="object-cover w-12 h-12 rounded-full" alt="profile" />
                                 {username}
                             </p>
-                            <p className="flex items-center">
+                            <p className="flex items-center p-2">
                                 <Clock className="mr-2" size={16} /> Published on {formatDate(created_at)}
                             </p>
                         </div>
@@ -103,7 +103,7 @@ function Details({ listingDetail }) {
                     </div>
 
                     {/* Map Card */}
-                    <div className="p-6 bg-gray-900 rounded-lg shadow-lg h-[580px]">
+                    <div className="p-6 mb-10">
                         <h2 className="mb-4 text-xl font-semibold text-secondary">Location</h2>
                         <div className="h-[400px]">
                             <GoogleMapSection

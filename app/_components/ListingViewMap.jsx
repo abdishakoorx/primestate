@@ -80,12 +80,12 @@ function ListingViewMap({ type }) {
 
 
     return (
-        <div className='grid grid-cols-1 gap-10 p-10 px-10 md:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-10 p-10 px-10 lg:grid-cols-2'>
             <div>
                 <Listing listing={listing} handleSearchClick={handleSearchClick} searchedAddress={(v) => setSearchedAddress(v)} setBedCount={setBedCount} setBathCount={setBathCount} setParkingCount={setParkingCount} setHomeType={setHomeType} setCoordinates={setCoordinates} />
             </div>
 
-            <div className='md:fixed md:right-10 h-100% md:w-[350px] lg:w-[450px] xl:w-[630px]'>
+            <div className='lg:fixed lg:right-10 h-100% lg:w-[450px] xl:w-[630px] 2xl:w-[800px]'>
                 <GoogleMapSection coordinates={coordinates} listing={listing} center={center} />
             </div>
         </div>
