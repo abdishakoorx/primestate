@@ -1,7 +1,10 @@
+"use client"
 import Link from 'next/link'
 import React from 'react'
+import { useUser } from '@clerk/nextjs';
 
 function HomeSection() {
+    const {isSignedIn} = useUser()
     return (
         <div>
             <section className="bg-black">
@@ -151,7 +154,7 @@ function HomeSection() {
 
                     <div className="mt-12 text-center">
                         <Link
-                            href={'/sign-in'}
+                            href={'/buy' }
                             className="inline-block px-8 py-4 text-lg font-semibold text-black transition bg-orange-500 rounded hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
                         >
                             Start Your Property Search

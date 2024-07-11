@@ -1,7 +1,9 @@
+"use client"
 import React from 'react'
 import Link from 'next/link'
 
 function HeroSection() {
+
     return (
         <div>
             <section
@@ -22,24 +24,26 @@ function HeroSection() {
                             Explore a wide range of residential and commercial properties.
                             From cozy apartments to luxurious homes, find the perfect space that matches your lifestyle.
                         </p>
-                        <div className="flex flex-wrap gap-4 mt-8 text-center">
-                            <Link
-                                href="sign-up"
-                                className="block w-full px-12 py-3 text-sm font-medium text-white rounded shadow bg-secondary hover:bg-secondary-dark focus:outline-none focus:ring active:bg-secondary-light sm:w-auto"
-                            >
-                                Search Properties
-                            </Link>
-                            <Link
-                                href="sign-up"
-                                className="block w-full px-12 py-3 text-sm font-medium bg-white rounded shadow text-secondary hover:text-secondary-dark focus:outline-none focus:ring active:text-secondary-light sm:w-auto"
-                            >
-                                Contact an Agent
-                            </Link>
-                        </div>
+                        
+                            <div className="flex flex-wrap gap-4 mt-8 text-center">
+
+                                <Link
+                                    href= {'/agent-finder'}
+                                    className="block w-full px-12 py-3 text-sm font-medium text-white rounded shadow bg-secondary hover:bg-secondary-dark focus:outline-none focus:ring active:bg-secondary-light sm:w-auto"
+                                >
+                                    Search Properties
+                                </Link>
+                                <Link
+                                     href={ '/agent-finder'}
+                                    className="block w-full px-12 py-3 text-sm font-medium bg-white rounded shadow text-secondary hover:text-secondary-dark focus:outline-none focus:ring active:text-secondary-light sm:w-auto"
+                                >
+                                    Contact an Agent
+                                </Link>
+                            </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     )
 }
 
