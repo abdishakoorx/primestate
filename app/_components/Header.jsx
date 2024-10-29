@@ -51,8 +51,8 @@ function Header() {
         
         <div className='flex items-center gap-2 md:gap-6'>
           <Link href={isSignedIn ? '/add_new_listing' : 'sign-in'}>
-            <Button className='bg-opacity-90 bg-tertiary hover:bg-opacity-100 hover:bg-tertiary'>
-              <Plus className='w-5 h-5' />Post
+            <Button className='bg-tertiary hover:bg-tertiary'>
+              <Plus className='w-5 h-5 mr-1' />Post
             </Button>
           </Link>
           
@@ -69,7 +69,7 @@ function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href={'/sign-in'}><Button className='bg-secondary hover:bg-tertiary'>Sign in</Button></Link>
+            <Link href={'/sign-in'}><Button className='bg-secondary hover:bg-secondary'>Sign in</Button></Link>
           )}
           
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>

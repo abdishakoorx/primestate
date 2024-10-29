@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 function FooterSection() {
   return (
-    <footer className="text-gray-300 bg-gray-700">
+    <footer className="text-gray-300 bg-transparent border-t border-secondary">
       <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-8">
@@ -56,7 +56,7 @@ function FooterSection() {
               />
               <button
                 type="submit"
-                className="px-4 py-2 text-white transition-colors bg-indigo-600 rounded-r-md hover:bg-indigo-700"
+                className="px-4 py-2 text-white transition-colors bg-tertiary rounded-r-md hover:bg-tertiary/80"
               >
                 Subscribe
               </button>
@@ -75,7 +75,7 @@ function FooterSection() {
           </div>
         </div>
       </div>
-      <div className="py-4 bg-gray-800">
+      <div className="py-4 bg-gray-900">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <p className="text-sm text-center">
             Making your real estate dreams a reality since 2005

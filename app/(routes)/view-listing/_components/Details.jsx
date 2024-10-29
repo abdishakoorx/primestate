@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Bath, Bed, Calendar, Car, DollarSign, MapPin, Clock, LandPlot, Share } from 'lucide-react';
+import { Bath, Bed, Calendar, Car, DollarSign, MapPin, Clock, LandPlot, Share } from 'lucide-react';
 import GoogleMapSection from '@/app/_components/GoogleMapSection';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -83,7 +83,7 @@ function Details({ listingDetail }) {
                     <div className="p-6 bg-gray-900 rounded-lg shadow-lg">
                         <h2 className="mb-4 text-xl font-semibold text-secondary">Description</h2>
                         <p className="mb-4">{description}</p>
-                        <div className="flex-col items-center justify-between pt-4 text-sm text-gray-400 border-t border-gray-700 md:flex">
+                        <div className="flex flex-col items-center justify-between pt-4 text-sm text-gray-400 border-t border-gray-500 md:flex-row">
                             <p className="flex items-center gap-2">
                                 <Image src={profileImage} width={30} height={30} className="object-cover w-12 h-12 rounded-full" alt="profile" />
                                 {username}

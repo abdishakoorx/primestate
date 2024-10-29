@@ -22,7 +22,7 @@ function OwnerSection() {
   const {isSignedIn} = useUser()
   const services = [
     {
-      title: "Property Listing Management",
+      title: "Property Management",
       description: "Easily manage and showcase your properties with our advanced listing tools.",
       icon: Building
     },
@@ -44,7 +44,7 @@ function OwnerSection() {
   ];
 
   return (
-    <section className="p-10 px-10 py-16 bg-black">
+    <section className="p-10 px-10 py-16 bg-transparent">
       <div className="container px-4 mx-auto">
         <motion.h2 
           initial={{ opacity: 0, y: -20 }}

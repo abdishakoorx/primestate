@@ -4,14 +4,14 @@ import React from 'react'
 function Testemonial() {
     return (
         <div>
-            <section className="bg-black">
+            <section className="bg-transparent">
                 <div className="max-w-screen-lg px-4 py-12 mx-auto sm:px-6 lg:px-8 lg:py-16">
                     <h2 className="text-4xl font-bold tracking-tight text-center text-secondary sm:text-5xl">
                         Read trusted reviews from our customers
                     </h2>
 
                     <div className="grid grid-cols-1 gap-4 mt-8 md:grid-cols-3 md:gap-8">
-                        <blockquote className="p-6 bg-gray-900 rounded-lg shadow-sm sm:p-8">
+                        <blockquote className="p-6 bg-gray-300 rounded-lg shadow-sm sm:p-8">
                             <div className="flex items-center gap-4">
                                 <img
                                     alt="image"
@@ -75,16 +75,16 @@ function Testemonial() {
                                         </svg>
                                     </div>
 
-                                    <p className="mt-0.5 text-lg font-medium text-quantenary">Paul </p>
+                                    <p className="mt-0.5 text-lg font-medium text-gray-600">Paul </p>
                                 </div>
                             </div>
 
-                            <p className="mt-4 text-primary">
+                            <p className="mt-4 text-gray-800">
                                 Renting a property was quick and hassle-free with this website. The listings were detailed, and the customer service was top-notch. I found the perfect apartment in no time!
                             </p>
                         </blockquote>
 
-                        <blockquote className="p-6 bg-gray-900 rounded-lg shadow-sm sm:p-8">
+                        <blockquote className="p-6 bg-gray-300 rounded-lg shadow-sm sm:p-8">
                             <div className="flex items-center gap-4">
                                 <Image
                                     alt="image"
@@ -138,16 +138,16 @@ function Testemonial() {
                                         </svg>
                                     </div>
 
-                                    <p className="mt-0.5 text-lg font-medium text-quantenary">James</p>
+                                    <p className="mt-0.5 text-lg font-medium text-gray-600">James</p>
                                 </div>
                             </div>
 
-                            <p className="mt-4 text-primary">
+                            <p className="mt-4 text-gray-800">
                                 I found my dream home with the help of this amazing team! The website was easy to navigate, and the agents were extremely knowledgeable and helpful. I highly recommend their services to anyone looking to buy a property
                             </p>
                         </blockquote>
 
-                        <blockquote className="p-6 bg-gray-900 rounded-lg shadow-sm sm:p-8">
+                        <blockquote className="p-6 bg-gray-300 rounded-lg shadow-sm sm:p-8">
                             <div className="flex items-center gap-4">
                                 <Image
                                     alt="image"
@@ -201,11 +201,11 @@ function Testemonial() {
                                         </svg>
                                     </div>
 
-                                    <p className="mt-0.5 text-lg font-medium text-quantenary">Julie</p>
+                                    <p className="mt-0.5 text-lg font-medium text-gray-600">Julie</p>
                                 </div>
                             </div>
 
-                            <p className="mt-4 text-primary">
+                            <p className="mt-4 text-gray-800">
                                 Selling my home was a seamless experience thanks to this platform. The team was professional, responsive, and provided excellent support throughout the entire process. I couldn't have asked for a better service.
                             </p>
                         </blockquote>
