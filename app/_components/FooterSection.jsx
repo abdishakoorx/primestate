@@ -1,89 +1,61 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { Home, Mail, Phone, MapPin } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-function FooterSection() {
+const Footer = () => {
   return (
-    <footer className="text-gray-300 bg-transparent border-t border-secondary">
+    <footer className="bg-primary text-primary-foreground">
       <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div className="space-y-8">
-            <Image src="/logo1.svg" alt="Logo"  width={50} height={50} />
-            <p className="text-sm">
-              Elevating real estate experiences with innovative solutions and unparalleled service.
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {/* Logo and Description */}
+          <div className="col-span-1 lg:col-span-2">
+            <div className="flex items-center mb-4 space-x-2">
+              <Image src="/logo-light.webp" alt="Logo" width={120} height={120} />
+            </div>
+            <p className="max-w-md mb-6 text-primary-foreground/80">
+              Your trusted partner in finding the perfect property. Whether you're buying, renting, or listing, we make real estate simple and accessible.
             </p>
-            <div className="flex space-x-6">
-              {['facebook', 'twitter', 'instagram', 'linkedin'].map((social) => (
-                <a key={social} href="#" className="text-gray-400 transition-colors hover:text-white">
-                  <span className="sr-only">{social}</span>
-                  <i className={`fab fa-${social} text-xl`}></i>
-                </a>
-              ))}
+            <div className="flex space-x-4">
+              <div className="flex items-center space-x-2 text-sm">
+                <Mail className="w-4 h-4" />
+                <span>hello@propertyhub.com</span>
+              </div>
             </div>
           </div>
+
+          {/* Quick Links */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-white">Quick Links</h3>
-            <ul className="space-y-2">
-              {['Home', 'Properties', 'Agents', 'About Us', 'Contact'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="transition-colors hover:text-white">
-                    {item}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="mb-4 font-semibold">Quick Links</h3>
+            <ul className="space-y-2 text-sm text-primary-foreground/80">
+              <li><Link href="/buy" className="transition-colors hover:text-primary-foreground">Buy Properties</Link></li>
+              <li><Link href="/rent" className="transition-colors hover:text-primary-foreground">Rent Properties</Link></li>
+              <li><Link href="/agent-finder" className="transition-colors hover:text-primary-foreground">Find Agents</Link></li>
+              <li><Link href="/add-new-listing" className="transition-colors hover:text-primary-foreground">List Property</Link></li>
             </ul>
           </div>
+
+          {/* Contact Info */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-white">Services</h3>
-            <ul className="space-y-2">
-              {['Property Valuation', 'Investment Advice', 'Mortgage Services', 'Legal Assistance', 'Market Analysis'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="transition-colors hover:text-white">
-                    {item}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="mb-4 font-semibold">Contact</h3>
+            <ul className="space-y-2 text-sm text-primary-foreground/80">
+              <li className="flex items-center space-x-2">
+                <Phone className="w-4 h-4" />
+                <span>+1 (555) 123-4567</span>
+              </li>
+              <li className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4" />
+                <span>123 Real Estate Ave, City, ST 12345</span>
+              </li>
             </ul>
           </div>
-          <div>
-            <h3 className="mb-4 text-lg font-semibold text-white">Newsletter</h3>
-            <p className="mb-4 text-sm">Stay updated with our latest properties and real estate news.</p>
-            <form className="flex">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-grow px-4 py-2 text-white bg-gray-800 rounded-l-md focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 text-white transition-colors bg-tertiary rounded-r-md hover:bg-tertiary/80"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
         </div>
-        <div className="flex flex-col items-center justify-between pt-8 mt-12 border-t border-gray-800 md:flex-row">
-          <p className="text-sm">&copy; {new Date().getFullYear()} Your Real Estate Company. All rights reserved.</p>
-          <div className="mt-4 md:mt-0">
-            <Link href="#" className="mr-4 text-sm transition-colors hover:text-white">
-              Privacy Policy
-            </Link>
-            <Link href="#" className="text-sm transition-colors hover:text-white">
-              Terms of Service
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="py-4 bg-gray-900">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <p className="text-sm text-center">
-            Making your real estate dreams a reality since 2005
-          </p>
+
+        <div className="pt-8 mt-8 text-sm text-center border-t border-primary-foreground/20 text-primary-foreground/60">
+          <p>&copy; 2024 PropertyHub. All rights reserved.</p>
         </div>
       </div>
     </footer>
   );
-}
+};
 
-export default FooterSection;
+export default Footer;
