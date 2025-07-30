@@ -8,7 +8,7 @@ function Provider({children}) {
     <div className='text-primary'>
         <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACE_API_KEY} libraries={['places']}>
         <Header/>
-        <div className='mt-20'>
+        <div>
           {children}
         </div>
         </LoadScript>
