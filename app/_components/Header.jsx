@@ -1,96 +1,112 @@
-"use client"
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { SignOutButton, UserButton, useUser } from '@clerk/nextjs';
-import { Plus, Menu, X } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Menu, X, Home, PlusCircle, Users, ShoppingCart, Building } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-function Header() {
-  const { user, isSignedIn } = useUser()
-  const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const handleLinkClick = () => {
-    setIsMenuOpen(false);
-  };
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-
-  const NavItem = ({ href, children }) => (
-    <Link href={href} onClick={handleLinkClick}>
-      <li className={`font-medium cursor-pointer hover:text-tertiary ${pathname === href ? 'text-tertiary' : ''}`}>
-        {children}
-      </li>
-    </Link>
-  );
+  const navItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/buy", label: "Buy", icon: ShoppingCart },
+    { href: "/rent", label: "Rent", icon: Building },
+    { href: "/agent-finder", label: "Agents", icon: Users },
+  ];
 
   return (
-    <div className='fixed top-0 z-10 w-full bg-black shadow-sm shadow-quantenary'>
-      <div className='flex items-center justify-between p-6 md:px-10'>
-        <div className="flex items-center gap-20">
-          <Link href={'/'}>
-            <Image src='/logo.png' alt='logo' width={120} height={120} />
+    <nav className="sticky top-0 z-50 border-b bg-card">
+      <div className="px-4 mx-auto sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <Image src={'/logo.webp'} alt="Logo" width={120} height={120} />
           </Link>
-          
-          <ul className='hidden gap-10 md:flex'>
-            <NavItem href="/">Home</NavItem>
-            <NavItem href="/buy">Buy Property</NavItem>
-            <NavItem href="/rent">Rent Property</NavItem>
-            <NavItem href="/agent-finder">Agent Finder</NavItem>
-          </ul>
-        </div>
-        
-        <div className='flex items-center gap-2 md:gap-6'>
-          <Link href={isSignedIn ? '/add_new_listing' : 'sign-in'}>
-            <Button className='bg-tertiary hover:bg-tertiary'>
-              <Plus className='w-5 h-5 mr-1' />Post
-            </Button>
-          </Link>
-          
-          {isSignedIn ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Image src={user?.imageUrl} width={40} height={40} alt='user' className='rounded-full cursor-pointer' />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className='cursor-pointer'><Link href={'/user'}>My Listing</Link></DropdownMenuItem>
-                <DropdownMenuItem className='cursor-pointer'><SignOutButton>Logout</SignOutButton></DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link href={'/sign-in'}><Button className='bg-secondary hover:bg-secondary'>Sign in</Button></Link>
-          )}
-          
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-      
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <ul className="flex flex-col items-center py-4">
-            <NavItem href="/">Home</NavItem>
-            <NavItem href="/buy">Buy Property</NavItem>
-            <NavItem href="/rent">Rent Property</NavItem>
-            <NavItem href="/agent-finder">Agent Finder</NavItem>
-          </ul>
-        </div>
-      )}
-    </div>
-  )
-}
 
-export default Header
+          {/* Desktop Navigation */}
+          <div className="items-center hidden space-x-8 md:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center px-3 py-2 space-x-1 text-sm font-medium transition-colors rounded-lg"
+              >
+                <item.icon className="w-4 h-4" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="items-center hidden space-x-4 md:flex">
+            <SignedIn>
+              <Link href="/add-new-listing">
+                <Button variant="secondary" size="sm" className="flex items-center space-x-1">
+                  <PlusCircle className="w-4 h-4" />
+                  <span>List Property</span>
+                </Button>
+              </Link>
+              <UserButton />
+            </SignedIn>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button variant="outline" size="sm">Sign In</Button>
+              </SignInButton>
+            </SignedOut>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="py-4 border-t md:hidden border-border">
+            <div className="flex flex-col space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-center px-3 py-2 space-x-2 text-sm font-medium transition-colors rounded-lg"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+              <div className="pt-4 space-y-2">
+                <SignedIn>
+                  <Link href="/add-new-listing">
+                    <Button variant="secondary" size="sm" className="flex items-center space-x-1">
+                      <PlusCircle className="w-4 h-4" />
+                      <span>List Property</span>
+                    </Button>
+                  </Link>
+                  <UserButton />
+                </SignedIn>
+
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button variant="outline" className="w-full">Sign In</Button>
+                  </SignInButton>
+                </SignedOut>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Header;
