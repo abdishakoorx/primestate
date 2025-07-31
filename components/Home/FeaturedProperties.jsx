@@ -54,7 +54,7 @@ function FeaturedProperties() {
                         type: property.type || 'sale',
                         imageUrl: firstImage,
                         agent: {
-                            name: property.fullName || 'Agent',
+                            name: property.username,
                             avatar: property.profileImage || null
                         }
                     };
