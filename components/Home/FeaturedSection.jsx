@@ -9,7 +9,7 @@ function FeaturedSection() {
             <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div className="mb-16 text-center">
                     <h2 className="mb-4 text-3xl font-bold md:text-4xl text-foreground">
-                        Why Choose PropertyHub?
+                        Why Choose Primestate?
                     </h2>
                     <p className="max-w-3xl mx-auto text-xl text-muted-foreground">
                         We make property management simple, efficient, and transparent for everyone involved.
