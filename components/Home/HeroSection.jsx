@@ -72,7 +72,7 @@ function HeroSection() {
                                 </Button>
                             </Link>
                             <Link href="/rent">
-                                <Button variant="outline" size="lg" className="text-white bg-white/10 border-white/30 hover:bg-white/20">
+                                <Button variant="outline" size="lg" className="text-white bg-white/10 border-white/30 hover:bg-white/20 hover:text-white/50">
                                     Find Rental Properties
                                     <ArrowRight className="w-5 h-5 ml-2" />
                                 </Button>
