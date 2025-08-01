@@ -6,7 +6,6 @@ import HowItWorks from "@/components/Home/HowItWorks";
 import FAQSection from "@/components/Home/FAQSection";
 import Testimonials from "@/components/Home/Testimonials";
 import CTASection from "@/components/Home/CTASection";
-import Footer from "@/components/Home/Footer";
 
 export default function Home() {
   return (
@@ -19,7 +18,6 @@ export default function Home() {
       <FAQSection />
       <Testimonials />
       <CTASection />
-      <Footer />
     </div>
   );
 }
