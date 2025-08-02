@@ -20,9 +20,11 @@ function CTASection() {
                             <ArrowRight className="w-5 h-5 ml-2" />
                         </Button>
                     </Link>
-                    <Button variant="outline" size="lg" className="text-white bg-white/10 border-white/30 hover:bg-white/20">
-                        Learn More
-                    </Button>
+                    <Link href="/about">
+                        <Button variant="outline" size="lg" className="text-white bg-white/10 border-white/30 hover:bg-white/20">
+                            Learn More
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>
