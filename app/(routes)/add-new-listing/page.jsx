@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import { supabase } from '@/Utils/supabase/client'
-import { useUser } from '@clerk/nextjs'
+import { RedirectToSignIn, useAuth, useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { ArrowLeft, Plus, Sparkles, CheckCircle } from 'lucide-react'
@@ -14,13 +14,25 @@ import DescriptionImagesForm from '@/components/listing/DescriptionImagesForm'
 import NavigationButtons from '@/components/listing/NavigationButtons'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { PropertyCardLoading } from '@/components/custom/PropertyCard'
 
 function AddNewListing() {
+  const { isLoaded, isSignedIn } = useAuth()
   const { user } = useUser()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [images, setImages] = useState([])
+
+  // Redirect to sign in if not authenticated
+  if (isLoaded && !isSignedIn) {
+    return <RedirectToSignIn />
+  }
+
+  // Show loading while auth is being determined
+  if (!isLoaded) {
+    return <PropertyCardLoading />
+  }
 
   const [formData, setFormData] = useState({
     type: 'Sell',

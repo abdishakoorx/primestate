@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/Utils/supabase/client'
 import { toast } from 'sonner'
-import { useUser } from '@clerk/nextjs'
+import { RedirectToSignIn, useAuth, useUser } from '@clerk/nextjs'
 import { ArrowLeft, Settings, Eye, Save, Globe } from 'lucide-react'
 
 import BasicInfoForm from '@/components/listing/BasicInfoForm'
@@ -15,12 +15,23 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
 function EditListing({ params }) {
+    const { isLoaded, isSignedIn } = useAuth()
     const { user } = useUser()
     const router = useRouter()
     const [listing, setListing] = useState(null)
     const [images, setImages] = useState([])
     const [loading, setLoading] = useState(false)
     const [initialLoading, setInitialLoading] = useState(true)
+
+    // Redirect to sign in if not authenticated
+    if (isLoaded && !isSignedIn) {
+        return <RedirectToSignIn />
+    }
+
+    // Show loading while auth is being determined
+    if (!isLoaded) {
+        return <PropertyCardLoading />
+    }
 
     const [formData, setFormData] = useState({
         type: 'Sell',
