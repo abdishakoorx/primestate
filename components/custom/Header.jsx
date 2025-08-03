@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, PlusCircle, Users, ShoppingCart, Building, Phone, Info } from "lucide-react";
+import { Menu, X, Home, PlusCircle, Users, ShoppingCart, Building, Phone, Info, List } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
@@ -17,8 +17,10 @@ const Header = () => {
     { href: "/buy", label: "Buy", icon: ShoppingCart },
     { href: "/rent", label: "Rent", icon: Building },
     { href: "/agent-finder", label: "Agents", icon: Users },
-    { href: "/about", label: "About Us", icon: Info },
-    { href: "/contact", label: "Contact Us", icon: Phone },
+  ];
+
+  const userNavItems = [
+    { href: "/my-listings", label: "My Listings", icon: List },
   ];
 
   const isActiveLink = (href) => {
@@ -58,6 +60,29 @@ const Header = () => {
                 </Link>
               );
             })}
+
+            {/* User-only navigation items */}
+            <SignedIn>
+              {userNavItems.map((item) => {
+                const isActive = isActiveLink(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center px-3 py-2 space-x-1 text-sm font-medium transition-colors rounded-lg relative ${isActive
+                      ? 'text-primary bg-primary/5'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      }`}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                    {isActive && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                    )}
+                  </Link>
+                );
+              })}
+            </SignedIn>
           </div>
 
           {/* Action Buttons */}
@@ -112,10 +137,32 @@ const Header = () => {
                   </Link>
                 );
               })}
+
+              {/* User-only mobile navigation items */}
+              <SignedIn>
+                {userNavItems.map((item) => {
+                  const isActive = isActiveLink(item.href);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center px-3 py-2 space-x-2 text-sm font-medium transition-colors rounded-lg relative ${isActive
+                        ? 'text-primary bg-primary/5 border-l-2 border-primary'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                        }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </SignedIn>
+
               <div className="pt-4 space-y-2">
                 <SignedIn>
                   <Link href="/add-new-listing">
-                    <Button variant="secondary" size="sm" className="flex items-center space-x-1">
+                    <Button variant="secondary" size="sm" className="flex items-center w-full space-x-1">
                       <PlusCircle className="w-4 h-4" />
                       <span>List Property</span>
                     </Button>
