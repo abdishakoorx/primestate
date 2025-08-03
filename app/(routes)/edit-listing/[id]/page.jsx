@@ -1,312 +1,293 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { Formik } from 'formik'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/Utils/supabase/client'
 import { toast } from 'sonner'
-import { useUser } from '@clerk/nextjs'
-import FileUpload from '../_components/FileUpload'
-import { Loader, Loader2 } from 'lucide-react'
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import { RedirectToSignIn, useAuth, useUser } from '@clerk/nextjs'
+import { ArrowLeft, Settings, Eye, Save, Globe } from 'lucide-react'
 
-
-
+import BasicInfoForm from '@/components/listing/BasicInfoForm'
+import PropertyDetailsForm from '@/components/listing/PropertyDetailsForm'
+import LocationForm from '@/components/listing/LocationForm'
+import DescriptionImagesForm from '@/components/listing/DescriptionImagesForm'
+import { PropertyCardLoading } from '@/components/custom/PropertyCard'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 function EditListing({ params }) {
+    const { isLoaded, isSignedIn } = useAuth()
     const { user } = useUser()
     const router = useRouter()
-    const [listing, setListing] = useState([])
+    const [listing, setListing] = useState(null)
     const [images, setImages] = useState([])
-    const [loading, setloading] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [initialLoading, setInitialLoading] = useState(true)
+
+    // Redirect to sign in if not authenticated
+    if (isLoaded && !isSignedIn) {
+        return <RedirectToSignIn />
+    }
+
+    // Show loading while auth is being determined
+    if (!isLoaded) {
+        return <PropertyCardLoading />
+    }
+
+    const [formData, setFormData] = useState({
+        type: 'Sell',
+        propertyType: '',
+        price: '',
+        title: '',
+        description: '',
+        bedroom: '',
+        bathroom: '',
+        builtIn: '',
+        parking: '',
+        lotSize: '',
+        area: '',
+        hoa: '',
+        address: '',
+        profileImage: user?.imageUrl || '',
+        username: user?.fullName || ''
+    })
 
     useEffect(() => {
-        user && verifyUserRecord();
+        if (user) {
+            verifyUserRecord()
+        }
     }, [user])
 
     const verifyUserRecord = async () => {
-        const { data, error } = await supabase
-            .from('listing')
-            .select('*,listingImages(listing_id,url)')
-            .eq('createdby', user?.primaryEmailAddress.emailAddress)
-            .eq('id', params.id)
+        try {
+            const { data, error } = await supabase
+                .from('listing')
+                .select('*,listingImages(listing_id,url)')
+                .eq('createdby', user?.primaryEmailAddress.emailAddress)
+                .eq('id', params.id)
 
-        if (data) {
-            setListing(data[0]);
-        }
+            if (error) throw error
 
-        if (data?.length <= 0) {
+            if (data && data.length > 0) {
+                const listingData = data[0]
+                setListing(listingData)
+                setFormData({
+                    type: listingData.type || 'Sell',
+                    propertyType: listingData.propertyType || '',
+                    price: listingData.price || '',
+                    title: listingData.title || '',
+                    description: listingData.description || '',
+                    bedroom: listingData.bedroom || '',
+                    bathroom: listingData.bathroom || '',
+                    builtIn: listingData.builtIn || '',
+                    parking: listingData.parking || '',
+                    lotSize: listingData.lotSize || '',
+                    area: listingData.area || '',
+                    hoa: listingData.hoa || '',
+                    address: listingData.address || '',
+                    profileImage: user?.imageUrl || '',
+                    username: user?.fullName || ''
+                })
+            } else {
+                router.replace('/')
+            }
+        } catch (error) {
+            console.error('Error fetching listing:', error)
+            toast.error('Error loading listing data')
             router.replace('/')
+        } finally {
+            setInitialLoading(false)
         }
     }
 
-    const onSubmitHandler = async (formValue) => {
-        setloading(true)
-        const { data, error } = await supabase
-            .from('listing')
-            .update(formValue)
-            .eq('id', params.id)
-            .select();
+    const handleInputChange = (name, value) => {
+        setFormData(prev => ({ ...prev, [name]: value }))
+    }
 
-        if (data) {
-            toast('Listing Updated and Saved');
-            setloading(false)
-        }
+    const onSubmitHandler = async () => {
+        setLoading(true)
 
-        for (const image of images) {
-            setloading(true)
-            const file = image;
-            const fileName = Date.now().toString();
-            const fileExtract = fileName.split('.').pop();
+        try {
+            const { data, error } = await supabase
+                .from('listing')
+                .update(formData)
+                .eq('id', params.id)
+                .select()
 
-            const { data, error } = await supabase.storage
-                .from('listingImages')
-                .upload(`${fileName}`, file, {
-                    contentType: `image/${fileExtract}`,
-                    upsert: false
-                })
+            if (error) throw error
 
-            if (error) {
-                setloading(false)
-                toast('Error uploading images')
-            }
+            if (images.length > 0) {
+                for (const image of images) {
+                    const fileName = Date.now().toString() + Math.random().toString(36).substring(7)
 
-            else {
-                const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL + fileName;
-                const { data, error } = await supabase
-                    .from('listingImages')
-                    .insert([
-                        { url: imageUrl, listing_id: params?.id }
-                    ])
-                    .select()
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('listingImages')
+                        .upload(`${fileName}`, image, {
+                            contentType: `image/${image.name.split('.').pop()}`,
+                            upsert: false
+                        })
 
-                if (data) {
-                    setloading(false)
-                }
-
-                if (error) {
-                    setloading(false)
+                    if (!uploadError) {
+                        const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL + fileName
+                        await supabase
+                            .from('listingImages')
+                            .insert([{ url: imageUrl, listing_id: params.id }])
+                    }
                 }
             }
-            setloading(false)
+
+            toast.success('Listing updated successfully!')
+
+        } catch (error) {
+            console.error('Error updating listing:', error)
+            toast.error('Error updating listing')
+        } finally {
+            setLoading(false)
         }
     }
 
     const publishHandler = async () => {
-        setloading(true)
-        const { data, error } = await supabase
-            .from('listing')
-            .update({ active: true })
-            .eq('id', params?.id)
-            .select()
+        setLoading(true)
 
-            if (data){
-                setloading(false);
-                toast('New Listing Published')
-            }
+        try {
+            const { data, error } = await supabase
+                .from('listing')
+                .update({ active: true })
+                .eq('id', params?.id)
+                .select()
+
+            if (error) throw error
+
+            toast.success('Listing published successfully!')
+
+        } catch (error) {
+            console.error('Error publishing listing:', error)
+            toast.error('Error publishing listing')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handlePreview = () => {
+        router.push(`/view-listing/${params.id}`)
+    }
+
+    if (initialLoading) {
+        return (
+            <PropertyCardLoading />
+        )
     }
 
     return (
-        <div className='px-10 my-10 md:px-36'>
-            <h2 className='text-xl font-bold'>Enter more details about your Listing</h2>
-            <Formik initialValues={{
-                type: 'Sell',
-                propertyType: '',
-                profileImage: user?.imageUrl,
-                username: user?.fullName
-            }}
-                onSubmit={(values) => {
-                    onSubmitHandler(values);
-                }}>
-                {({ values, handleChange, handleSubmit }) => (
-                    <form onSubmit={handleSubmit}>
-                        <div className='p-8 mt-10 rounded-lg shadow-md shadow-quantenary'>
-                            <div className='flex flex-col gap-8'>
-                                <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
-                                    <div>
-                                        <h2 className='mb-3 text-lg font-semibold text-slate-400'>Sell or Rent</h2>
-                                        <RadioGroup defaultValue={listing?.type} className="space-y-2"
-                                            onValueChange={(v) => values.type = v}>
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="Sell" id="Sell" />
-                                                <Label htmlFor="Sell" className='text-lg'>Sell</Label>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="Rent" id="Rent" />
-                                                <Label htmlFor="Rent" className='text-lg'>Rent</Label>
-                                            </div>
-                                        </RadioGroup>
-                                    </div>
-                                    <div>
-                                        <h2 className='mb-3 text-lg font-semibold text-slate-400'>Property Type</h2>
-                                        <Select onValueChange={(e) => values.propertyType = e} name='propertyType'
-                                            defaultValue={listing?.propertyType}>
-                                            <SelectTrigger className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                                <SelectValue placeholder={listing?.propertyType ? listing?.propertyType : "Select Property"} />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="Apartment">Apartment</SelectItem>
-                                                <SelectItem value="Bungalow">Bungalow</SelectItem>
-                                                <SelectItem value="Single Family House">Single Family House</SelectItem>
-                                                <SelectItem value="Bedsitter">Bedsitter</SelectItem>
-                                                <SelectItem value="Hostel">Hostel</SelectItem>
-                                                <SelectItem value="Villa">Villa</SelectItem>
-                                                <SelectItem value="Penthouse">Penthouse</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
-                                <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3'>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Bedroom" className="text-sm font-medium text-slate-400">Bedroom</Label>
-                                        <Input
-                                            type="number"
-                                            name="bedroom"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.bedroom}
-                                            placeholder="Ex. 2"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Bathroom" className="text-sm font-medium text-slate-400">Bathroom</Label>
-                                        <Input
-                                            type="number"
-                                            name="bathroom"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.bathroom}
-                                            placeholder="Ex. 2"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Built In" className="text-sm font-medium text-slate-400">Built In</Label>
-                                        <Input
-                                            type="text"
-                                            name="builtIn"
-                                            placeholder="Ex. 2017"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.builtIn}
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Parking" className="text-sm font-medium text-slate-400">Parking Space</Label>
-                                        <Input
-                                            type="number"
-                                            name="parking"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.parking}
-                                            placeholder="Ex. 1"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Lot Size" className="text-sm font-medium text-slate-400">Lot Size (Sqr Ft)</Label>
-                                        <Input
-                                            type="number"
-                                            name="lotSize"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.lotSize}
-                                            placeholder="Ex. 1000"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Area" className="text-sm font-medium text-slate-400">Area (Sqt Ft)</Label>
-                                        <Input
-                                            type="number"
-                                            name="area"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.area}
-                                            placeholder="Ex. 1000"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="Price" className="text-sm font-medium text-slate-400">Price (Ksh)</Label>
-                                        <Input
-                                            type="number"
-                                            name="price"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.price}
-                                            placeholder="10000"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <Label htmlFor="HOA" className="text-sm font-medium text-slate-400">HOA (Ksh Per Month)</Label>
-                                        <Input
-                                            type="number"
-                                            name="hoa"
-                                            onChange={handleChange}
-                                            defaultValue={listing?.hoa}
-                                            placeholder="1000"
-                                            className="w-full p-5 transition duration-150 ease-in-out border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className='grid grid-cols-1 gap-10 mt-10'>
-                                    <div className='flex flex-col gap-2'>
-                                        <h2 className='mb-3 text-lg font-semibold text-slate-400'>Description</h2>
-                                        <Textarea placeholder='' name="description" onChange={handleChange}
-                                            defaultValue={listing?.description} />
-                                    </div>
-                                </div>
-
-                                <div className='flex flex-col gap-2 mt-10'>
-                                    <h2 className='mb-3 text-lg font-semibold text-slate-400'>Upload Property Images</h2>
-                                    <FileUpload setImages={(value) => setImages(value)} imageList={listing.listingImages} />
-                                </div>
-
-                                <div className='flex justify-end gap-4'>
-                                    <Button disabled={loading} variant="outline" className='mt-10  border-tertiary border-4 font-bold h-[45px] text-black bg-primary hover:bg-primary rounded-xl'>{loading ? <Loader className='animate-spin' /> : 'Save'}</Button>
-
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button disabled={loading} type="button" className='mt-10 font-bold text-black rounded-xl h-[45px] bg-tertiary hover:bg-tertiary'>{loading ? <Loader className='animate-spin' /> : 'Save & Publish'}</Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Confirm Your Action</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    Are you sure you want to save and publish this listing? Once published, your changes will be live for everyone to see.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => publishHandler()}>{loading ?<Loader className='animate-spin' /> : 'Publish'}</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-
-                                </div>
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+            {/* Enhanced Header */}
+            <div className="top-0 z-10 bg-background/80">
+                <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                            <div>
+                                <h1 className="text-3xl font-bold text-primary">
+                                    Edit Listing
+                                </h1>
+                                <p className="text-muted-foreground">
+                                    Update your property details and photos
+                                </p>
                             </div>
                         </div>
-                    </form>)}
-            </Formik>
+
+                        <div className="flex items-center space-x-3">
+                            <div className="flex items-center px-4 py-2 space-x-2 border rounded-xl border-primary/10">
+                                <Settings className="w-4 h-4 text-primary" />
+                                <span className="text-sm font-medium text-foreground">
+                                    {listing?.active ? 'Published' : 'Draft'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="max-w-5xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
+                <div className="space-y-12">
+                    {/* Progress Indicator */}
+                    <Card className="p-6 border-2 bg-background/80 backdrop-blur-sm">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                                <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
+                                <span className="font-semibold text-foreground">Editing Mode</span>
+                            </div>
+                            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                                <span>Last updated:</span>
+                                <span className="font-medium">{new Date().toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Form Sections */}
+                    <div className="space-y-12">
+                        {/* Basic Information */}
+                        <BasicInfoForm
+                            formData={formData}
+                            handleInputChange={handleInputChange}
+                            showTitle={true}
+                        />
+
+                        {/* Property Details */}
+                        <PropertyDetailsForm
+                            formData={formData}
+                            handleInputChange={handleInputChange}
+                        />
+
+                        {/* Location */}
+                        <LocationForm
+                            formData={formData}
+                            handleInputChange={handleInputChange}
+                        />
+
+                        {/* Description & Images */}
+                        <DescriptionImagesForm
+                            formData={formData}
+                            handleInputChange={handleInputChange}
+                            setImages={setImages}
+                            imageList={listing?.listingImages || []}
+                            loading={loading}
+                            onSave={onSubmitHandler}
+                            onPublish={publishHandler}
+                            onPreview={handlePreview}
+                            showActions={true}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Fixed Bottom Status Bar */}
+            <div className="fixed bottom-0 left-0 right-0 z-10 p-4 border-t bg-background/95 backdrop-blur-sm border-border">
+                <div className="flex items-center justify-between max-w-5xl mx-auto">
+                    <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${listing?.active ? 'bg-green-500' : 'bg-yellow-500'} animate-pulse`} />
+                        <span className="text-sm font-medium text-foreground">
+                            Status: {listing?.active ? 'Live & Published' : 'Draft Mode'}
+                        </span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            onClick={handlePreview}
+                            variant="ghost"
+                            size="sm"
+                            className="rounded-xl"
+                        >
+                            <Eye className="w-4 h-4 mr-2" />
+                            Preview
+                        </Button>
+                        {listing?.active && (
+                            <div className="flex items-center space-x-1 text-sm text-green-600">
+                                <Globe className="w-4 h-4" />
+                                <span>Live</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
